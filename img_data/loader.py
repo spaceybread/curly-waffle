@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import sys
 
-MIN_IMG_TH = 10
+MIN_IMG_TH = 20
 
 def load_data(npz_file, info_file):
     npz = np.load(npz_file)
@@ -39,6 +39,34 @@ def sample_ids(ids, t):
     # print(reg_vals)
     # print(plus1, other)
     return reg_vals, plus1, other
+    
+def sample_group_name(ids):
+    return ids.sample(1).index[0]
+
+def sample_ids_from_group(ids, group_name, t):
+    grp = ids.loc[group_name]
+
+    # Get t registration vectors
+    reg_vals = np.random.choice(grp, t, replace=False)
+    
+    # +1 from the same group
+    plus1 = np.random.choice(grp, 1)
+    
+    # Get 1 from another group
+    others = ids.drop(group_name)
+    other = np.random.choice(np.hstack(others.values), 1)
+    
+    return reg_vals, plus1, other
+
+def sample_tp(ids, group_name):
+    group_vectors = ids.loc[group_name]
+    in_v = np.random.choice(group_vectors, 1)[0]
+
+    other_groups = ids.drop(group_name)
+    out_v = np.random.choice(np.hstack(other_groups.values), 1)[0]
+
+    return in_v, out_v
+
 
 def get_vectors(reg_vals, plus1, other, daf):
     reg_vectors = daf.loc[reg_vals].iloc[:, :-2]
@@ -47,7 +75,6 @@ def get_vectors(reg_vals, plus1, other, daf):
     
     return reg_vectors, p1_vector, ot_vector
 
-daf, ids = load_data(sys.argv[1], sys.argv[2])
-reg_ids, p1_id, ot_id = sample_ids(ids, 6)
-get_vectors(reg_ids, p1_id, ot_id, daf)
+# reg_ids, p1_id, ot_id = sample_ids(ids, 6)
+# get_vectors(reg_ids, p1_id, ot_id, daf)
 
