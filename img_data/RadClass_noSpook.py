@@ -9,24 +9,20 @@ class RadialClassifier:
         self.center = reg.mean(axis=0)
         self.max_dist = self.get_def_rad(reg, mi = 0)
         
-        self.hi, self.lo = 2, 1/16
+        self.hi, self.lo = 8, 1/8
         self.alpha = (self.hi * self.lo) ** 0.5
         
         self.radius = self.max_dist * self.alpha
     
     def push_alpha(self):
-        print("bef:", self.alpha)
         self.lo = self.alpha
         self.alpha = (self.hi * self.lo) ** 0.5
         self.adj_rad()
-        print("aft:", self.alpha)
     
     def pull_alpha(self):
-        print("bef:", self.alpha)
         self.hi = self.alpha
         self.alpha = (self.hi * self.lo) ** 0.5
         self.adj_rad()
-        print("aft:", self.alpha)
         
     def adj_rad(self):
         self.radius = self.max_dist * self.alpha
