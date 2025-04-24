@@ -8,8 +8,8 @@ class RadialClassifier:
     def __init__(self, reg, rad = -1, mit = 0):
         self.center = reg.mean(axis=0)
         
-        self.lo = self.get_def_rad(reg, mi = mit)
-        self.hi = self.get_def_rad(reg, mi = mit) * 2
+        self.lo = self.get_def_rad(reg, mi = 1)
+        self.hi = self.get_def_rad(reg, mi = 0) * 2
         self.radius = self.compute_opt_r()
         
     def get_def_rad(self, reg, mi = 0):
