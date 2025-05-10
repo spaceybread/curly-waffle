@@ -20,6 +20,7 @@ def first_load(npz_file, text_file):
 
     rem = []
     for k in grp.keys():
+    # replacement strat
         if len(grp[k]) < T: rem.append(k)
     
     for r in rem: grp.pop(r)
@@ -37,27 +38,32 @@ def test_set(npz_file):
         out_set = []
         out_key = x
         for i in range(T):
-            while out_key != x:
-                out_key = random.choices(all_keys, k = 1)
+            while out_key == x:
+                out_key = random.choices(all_keys, k = 1)[0]
             out_set.append(random.choices(data[out_key], k = 1))
         
         center = np.mean(reg_vec, axis=0)
-        distances = np.linalg.norm(reg_vec - center, axis=1)
+        distances = [np.linalg.norm(ve - center) for ve in reg_vec]
         init_rad = np.max(distances)
         
-        ma[x] = (init_rad, center, in_set, out_set)
+        in_dist = [np.linalg.norm(ve - center) for ve in in_set]
+        out_dist = [np.linalg.norm(ve - center) for ve in out_set]
+        
+        ma[x] = (init_rad, in_dist, out_dist)
         # print(ma[x][0], ma[x][1])
     
-    np.save('accum_data.npy', ma)
+    np.save('accum_data_dist.npy', ma)
 
 def load_accum(npz_file):
     data = np.load(npz_file, allow_pickle=True).item()
     
     # example
     print(list(data.keys())[2])
-    print(data['8766'])
+    print(data['8766'][0])
+    print(data['8766'][1])
+    print(data['8766'][2])
     
     
-first_load(sys.argv[1], sys.argv[2])
+#first_load(sys.argv[1], sys.argv[2])
 test_set('mapped_data.npy')
-load_accum('accum_data.npy')
+load_accum('accum_data_dist.npy')
