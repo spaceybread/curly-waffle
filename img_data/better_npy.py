@@ -6,7 +6,7 @@ import numpy as np
 import random
 import sys
 
-T = 15
+T = 10
 R = 8
 
 def first_load(npz_file, text_file):
@@ -21,7 +21,7 @@ def first_load(npz_file, text_file):
     rem = []
     for k in grp.keys():
     # replacement strat
-        if len(grp[k]) < T: rem.append(k)
+        if len(grp[k]) < T + R: rem.append(k)
     
     for r in rem: grp.pop(r)
     np.save('mapped_data.npy', grp)
@@ -33,8 +33,13 @@ def test_set(npz_file):
     ma = {}
     
     for x in data.keys():
-        reg_vec = random.choices(data[x], k = R)
-        in_set = random.choices(data[x], k = T)
+        try:
+            booga_boo = random.sample(data[x], k = R + T)
+        except:
+            print(len(data[x]), R, T)
+            continue
+        reg_vec = booga_boo[:R]
+        in_set = booga_boo[R:]
         out_set = []
         out_key = x
         for i in range(T):
@@ -58,12 +63,13 @@ def load_accum(npz_file):
     data = np.load(npz_file, allow_pickle=True).item()
     
     # example
+    print(len(data.keys()))
     print(list(data.keys())[2])
-    print(data['8766'][0])
-    print(data['8766'][1])
-    print(data['8766'][2])
+    print(data['8667'][0])
+    print(data['8667'][1])
+    print(data['8667'][2])
     
     
-#first_load(sys.argv[1], sys.argv[2])
+first_load(sys.argv[1], sys.argv[2])
 test_set('mapped_data.npy')
 load_accum('accum_data_dist.npy')

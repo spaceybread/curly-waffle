@@ -20,6 +20,12 @@ def bin_search(data, ALPHA = 2/3):
     # 4/5 result: 1.0037665963172915 [0.8000089968511022, 0.00760233918128655]
     # 6/7 result: 1.067300617694855 [0.8571479982006298, 0.01537561853351327]
     
+    #updated dataset lower bounded TMR
+    # TMR = x/y result: coefficient
+    # 2/3 result: 0.9339694674126804
+    # 4/5 result: 1.0276660318486392
+    # 6/7 result: 1.085552275646478
+    
     keys = list(data.keys())
     res = {}
     
@@ -44,9 +50,10 @@ def bin_search(data, ALPHA = 2/3):
 
     return res, coeff
 
-# ma, val = bin_search(get_data())
-# print(val)
-
+#ma, val = bin_search(get_data())
+#print(val)
+#
+#exit()
 
 DATA = get_data()
 TMR, FMR = [], []
