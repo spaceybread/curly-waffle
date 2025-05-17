@@ -31,6 +31,7 @@ def test_set(npz_file):
     data = np.load(npz_file, allow_pickle=True).item()
     all_keys = list(data.keys())
     ma = {}
+    mb = {}
     
     for x in data.keys():
         try:
@@ -55,9 +56,11 @@ def test_set(npz_file):
         out_dist = [np.linalg.norm(ve - center) for ve in out_set]
         
         ma[x] = (init_rad, in_dist, out_dist)
+        mb[x] = (center, in_set, out_set)
         # print(ma[x][0], ma[x][1])
     
     np.save('accum_data_dist.npy', ma)
+    np.save('accum_data_for_lattice.npy', mb)
 
 def load_accum(npz_file):
     data = np.load(npz_file, allow_pickle=True).item()
@@ -70,6 +73,6 @@ def load_accum(npz_file):
     print(data['8667'][2])
     
     
-first_load(sys.argv[1], sys.argv[2])
+#first_load(sys.argv[1], sys.argv[2])
 test_set('mapped_data.npy')
-load_accum('accum_data_dist.npy')
+#load_accum('accum_data_dist.npy')
