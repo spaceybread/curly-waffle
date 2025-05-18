@@ -46,7 +46,7 @@ def test_set(npz_file):
         for i in range(T):
             while out_key == x:
                 out_key = random.choices(all_keys, k = 1)[0]
-            out_set.append(random.choices(data[out_key], k = 1))
+            out_set.append(random.choices(data[out_key], k = 1)[0])
         
         center = np.mean(reg_vec, axis=0)
         distances = [np.linalg.norm(ve - center) for ve in reg_vec]
@@ -56,7 +56,7 @@ def test_set(npz_file):
         out_dist = [np.linalg.norm(ve - center) for ve in out_set]
         
         ma[x] = (init_rad, in_dist, out_dist)
-        mb[x] = (center, in_set, out_set)
+        mb[x] = (center, init_rad, in_set, out_set)
         # print(ma[x][0], ma[x][1])
     
     np.save('accum_data_dist.npy', ma)

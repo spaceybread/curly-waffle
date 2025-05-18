@@ -51,7 +51,7 @@ def bin_search(data, ALPHA = 2/3):
     return res, coeff
 
 #ma, val = bin_search(get_data())
-#print(val)
+#print(val, ma[val])
 #
 #exit()
 
