@@ -14,7 +14,7 @@ def first_load(npz_file, text_file):
     print(npz.shape)
     npz = npz.squeeze(1)
     print(npz.shape)
-    ids = [x.strip().split('/')[-2] for x in open(text_file)]
+    ids = [x.strip().split('/')[-3] for x in open(text_file)]
 
     if (len(ids) != npz.shape[0]): print("Size Mismatch")
     
@@ -71,11 +71,11 @@ def load_accum(npz_file):
     # example
     print(len(data.keys()))
     print(list(data.keys())[2])
-    print(data['152842'][0])
-    print(data['152842'][1])
-    print(data['152842'][2])
+    print(data[list(data.keys())[2]][0])
+    print(data[list(data.keys())[2]][1])
+    print(data[list(data.keys())[2]][2])
     
     
-#first_load(sys.argv[1], sys.argv[2])
-#test_set('mapped_data.npy')
+first_load(sys.argv[1], sys.argv[2])
+test_set('mapped_data.npy')
 load_accum('accum_data_dist.npy')
