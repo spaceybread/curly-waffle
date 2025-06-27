@@ -3,10 +3,8 @@ from collections import Counter
 from functools import partial
 from tqdm import tqdm
 import numpy as np
+import pandas as pd
 import subprocess
-
-# leech lattice 5.21728515625 0.6660823838737949 0.10844288635699678
-
 
 def get_data(npz_file = 'accum_data_for_lattice.npy'):
     return np.load(npz_file, allow_pickle=True).item()
@@ -64,12 +62,17 @@ def bin_search(data, ALPHA = 2/3):
     keys = list(data.keys())
     res = {}
     exec = ProcessPoolExecutor()
-    for _ in tqdm(range(2)):
+    for _ in tqdm(range(16), desc="bin search"):
         tchk, fchk = 0, 0
         tks, fks = 0, 0
-        for key in tqdm(keys):
+        coeff = (hi + lo) / 2
         
-            coeff = (hi + lo) / 2
+        if mem.get(coeff) != None:
+            if mem.get(coeff)[0] > ALPHA: hi = coeff
+            else: lo = coeff
+            continue
+
+        for key in tqdm(keys, desc="keys"):
             rad = data[key][1] * coeff
             t_v = data[key][2]
             f_v = data[key][3]
@@ -88,6 +91,7 @@ def bin_search(data, ALPHA = 2/3):
             
         tmr, fmr = tchk / tks, fchk / fks
         res[coeff] = [tmr, fmr]
+        mem[coeff] = [tmr, fmr]
         print(coeff, tmr, fmr)
         # do lower bounded TMR not upper bounded FMR
         if tmr > ALPHA: hi = coeff
@@ -96,18 +100,39 @@ def bin_search(data, ALPHA = 2/3):
     exec.shutdown()
     return res, coeff
 
+
+
+
+
+    
+
+
 if __name__ == '__main__':
-    scale = "1.0"
-    a = "1.0 " * 512
-    b = "1.0 " * 512
+#    scale = "1.0"
+#    a = "1.0 " * 512
+#    b = "1.0 " * 512
+#
+#
+#
+##    data_sanity_parsing(data)
+#
+#    np.save('processed_lattice.npy', ma)
+#
+#    for r in ma.keys():
+#        print(r, ma[r])
 
-
+    res_ma = {
+        "coeff": [], "TMR": [], "FMR": []
+    }
     data = get_data()
-    ma, val = bin_search(data)
-#    data_sanity_parsing(data)
+    
+    mem = {}
 
-    np.save('processed_lattice.npy', ma)
-
-    for r in ma.keys():
-        print(r, ma[r])
-
+    for i in tqdm(range(5, 101, 5), desc="overall"):
+        ma, val = bin_search(data, ALPHA = i / 100)
+        for v in ma.keys():
+            res_ma["coeff"].append(v)
+            res_ma["TMR"].append(ma[v][0])
+            res_ma["FMR"].append(ma[v][1])
+        
+        pd.DataFrame.from_dict(res_ma, orient='columns').to_csv('e8_lattice.csv', index=False)
