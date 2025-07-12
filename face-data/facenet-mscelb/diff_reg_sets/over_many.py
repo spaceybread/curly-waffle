@@ -11,7 +11,7 @@ def get_data(npz_file = 'accum_data_dist.npy'):
 
 
 def bin_search(data, ALPHA = 6/7):
-    DELTA = 2
+    DELTA = 4
     hi, lo = DELTA, 0
     
     #updated dataset lower bounded TMR
