@@ -4,16 +4,17 @@ from scipy.interpolate import interp1d
 
 x = np.linspace(-1000, 1000, 5000)  
 K = 50                            
-R1 = 2
-R2 = R1 * np.sqrt(2)
 epsilon = 1e-10
 
-sd_min_values = np.linspace(10, 50, 5)  # 15, 25, 35, 45, 55
+sd_min_values = np.linspace(60, 100, 5)  # 15, 25, 35, 45, 55
 fig, axes = plt.subplots(nrows=5, figsize=(12, 15), sharex=True)
 
 for ax, sd_min in zip(axes, sd_min_values):
+    R1 = sd_min
+    R2 = R1 * np.sqrt(2)
+
     x_i = np.random.uniform(-800, 800, K)  
-    c = np.random.uniform(0.95, 1.05, K)   
+    c = np.random.uniform(1, 1.05, K)
     sd_i = sd_min * c             
 
     mix = np.zeros_like(x)
