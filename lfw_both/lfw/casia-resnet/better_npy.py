@@ -6,8 +6,8 @@ import numpy as np
 import random
 import sys
 
-T = 10
-R = 8
+T = 3
+R = 2
 
 def first_load(npz_file, text_file):
     npz = np.load(npz_file)
